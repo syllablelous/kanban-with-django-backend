@@ -8,8 +8,8 @@ class Task(models.Model):
         COMPLETED = "COMPLETED", "Completed"
         CANCELLED = "CANCELLED", "Cancelled"
         
-    task_name = models.CharField(max_length=200)
-    description = models.TextField()
+    task_name = models.CharField(max_length=100)
+    description = models.TextField(max_length=500)
     status = models.CharField(
         max_length=20,
         choices=Status.choices,

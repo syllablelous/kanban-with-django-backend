@@ -18,12 +18,17 @@
         emits: ['submit', 'close'],
         data() {
             return {
+                today: new Date(),
                 form: {
                     id: null,
                     task_name: '',
                     description: '',
                     due_date: null,
                     status: '',
+                },
+                limits: {
+                    task_name: 100,
+                    description: 500,
                 },
                 statusOptions: [
                     { label: 'Pending', value: 'PENDING' },
@@ -34,11 +39,14 @@
             }
         },
         mounted() {
-            this.form.id = this.task.id
-            this.form.task_name = this.task.task_name
-            this.form.description = this.task.description
-            this.form.status = this.task.status
-            this.form.due_date = this.parseDateTime(this.task.due_date)
+
+            this.form = {
+                id: this.task.id,
+                task_name: this.task.task_name,
+                description: this.task.description,
+                status: this.task.status,
+                due_date: this.parseDateTime(this.task.due_date)
+            }
         },
         components: {
             Dialog,
@@ -48,19 +56,21 @@
             Calendar,
             Dropdown,
         },
+        computed: {
+            isFormValid() {
+                return (
+                    this.form.task_name.trim().length > 0 &&
+                    this.form.description.trim().length > 0 &&
+                    this.form.due_date !== null
+                )
+            },
+        },
         methods: {
             submitForm() {
-                if (!this.form.task_name || !this.form.due_date) {
-                    alert('Task name and due date are required.')
-                    return
-                }
+                if (!this.isFormValid) return
 
                 this.$emit('submit', {
-                    id: this.form.id,
-                    task_name: this.form.task_name,
-                    description: this.form.description,
-                    due_date: this.formatDateTime(this.form.due_date),
-                    status: this.form.status,
+                    ...this.form,
                 })
             },
 
@@ -89,12 +99,21 @@
     >
         <div class="form-group">
             <label>Title</label>
-            <InputText v-model="form.task_name" />
+            <InputText 
+                v-model="form.task_name" 
+                :maxlength="limits.task_name"
+            />
+            <small>{{ form.task_name.length }} / {{ limits.task_name }}</small>
         </div>
         
         <div class="form-group">
             <label>Description</label>
-            <Textarea v-model="form.description" rows="3" />
+            <Textarea 
+                v-model="form.description" 
+                rows="3"
+                :maxlength="limits.description" 
+            />
+            <small>{{ form.description.length }} / {{ limits.description }}</small>
         </div>
 
         <div class="form-group">
@@ -105,6 +124,7 @@
                 showTime
                 hourFormat="24"
                 dateFormat="yy-mm-dd"
+                :minDate="today"
             />
         </div>
 
@@ -128,6 +148,7 @@
             <Button
                 label="Save Changes"
                 icon="pi pi-check"
+                :disabled="!isFormValid"
                 @click="submitForm"
             />
         </template>
@@ -146,4 +167,10 @@
         font-weight: bold;
         margin-bottom: 5px;
     }
+
+    small {
+        color: #6b7280;
+        font-size: 0.75rem;
+    }
+
 </style>

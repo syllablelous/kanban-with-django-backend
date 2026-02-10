@@ -18,6 +18,7 @@
 12. ~~Sort out .gitignore and other preparations for hosting on Github~~
 13. Add users functionality?
 14. What if mahaba yung description? Maybe truncate that.
-15. Null values in the form must render the submit button unclickable.
-16. Calendar picker must not allow us to pick past dates.
-17. Form must display count of limit and current characters.
+15. ~~Null values in the form must render the submit button unclickable.~~
+16. ~~Calendar picker must not allow us to pick past dates.~~
+17. ~~Form must display count of limit and current characters.~~
+18. Error Handling in the Forms
