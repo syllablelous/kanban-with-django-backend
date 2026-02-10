@@ -1,0 +1,27 @@
+import api from './api'
+
+export async function getTasks() {
+    const response = await api.get('tasks/')
+    return response.data
+}
+
+export async function createTask(task) {
+    const response = await api.post('tasks/', task)
+    return response.data
+}
+
+export async function updateTask(id, task) {
+    const response = await api.put(`tasks/${id}/`, task)
+    return response.data
+}
+
+export async function updateTaskStatus(id, status) {
+    const response = await api.patch(`tasks/${id}/`, {
+        status: status
+    })
+    return response.data
+}
+
+export async function deleteTask(id) {
+    await api.delete(`tasks/${id}/`)
+}
