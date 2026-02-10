@@ -12,7 +12,7 @@
     - ~~Drag ghost styling.~~
     - Animated task movement between columns?
 8. Backend polishing.
-9. Ensure that update via edit doesn't overwrite or leave other fields as null if they were left as is???
+9. ~~Ensure that update via edit doesn't overwrite or leave other fields as null if they were left as is??? (Doesn't happen so assume to be resolved)~~
 10. ~~Add task button should use an icon.~~
 11. ~~Frontend bug, dragging a card carries over the background color of the column that it belonged to. The height of the background color it is carrying is dependent on the height of the two action buttons.~~
 12. ~~Sort out .gitignore and other preparations for hosting on Github~~
