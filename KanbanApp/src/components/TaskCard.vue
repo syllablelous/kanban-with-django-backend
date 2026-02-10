@@ -32,6 +32,10 @@
         methods: {
             onDragStart(event) {
                 event.dataTransfer.setData('taskId', this.task.id)
+                event.target.classList.add('dragging')
+            },
+            onDragEnd(event) {
+                event.target.classList.remove('dragging')
             }
         }
     }
@@ -42,6 +46,7 @@
         class="task-card-section"
         draggable="true"
         @dragstart="onDragStart"
+        @dragend="onDragEnd"
         :style="{ '--base-color': baseColor }"
     >
         <div class="card-actions">
@@ -81,6 +86,14 @@
         border-radius: 8px;
         text-align: left;
         margin-bottom: 10px;
+        isolation: isolate;
+        background-clip: padding-box;
+    }
+
+    .task-card.dragging {
+        opacity: 0.5;
+        transform: rotate(2deg);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     .card-actions {

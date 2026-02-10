@@ -129,12 +129,15 @@
         const task = this.tasks.find(t => t.id === taskId)
         if (!task || task.status === newStatus) return
 
+        const previousStatus = task.status
+
         task.status = newStatus
 
         try {
           await updateTaskStatus(taskId, newStatus)
         } catch (error) {
           console.error('Failed to update task status:', error)
+          task.status = previousStatus
         }
       }
     },
@@ -149,8 +152,9 @@
       <p>Drag and Drop the tasks to update its status</p>
     </div>
 
-    <button id="add-task-btn" @click="openAddModal">
-      + Add Task
+    <button class="add-task-btn" @click="openAddModal">
+      <i class="pi pi-plus"></i>
+      Add Task
     </button>
   </div>
 
@@ -228,7 +232,7 @@
     font-weight: bold;
   }
 
-  #add-task-btn {
+  .add-task-btn {
     background-color: #03B57B;
     border: none;
     border-radius: 8px;
@@ -242,7 +246,7 @@
     transition: background-color transform 1.2s;
   }
 
-  #add-task-btn:hover {
+  .add-task-btn:hover {
     background-color: #039a67;
     transform: scale(0.98);
   }

@@ -1,6 +1,6 @@
 <script>
     import TaskCard from './TaskCard.vue';
-
+    
     export default {
         name: "StatusListCard",
         props: {
@@ -12,6 +12,11 @@
                 type: Array,
                 required: true
             },
+        },
+        data() {
+            return {
+                isDragOver: false
+            }
         },
         computed: {
             filteredTasks() {
@@ -31,11 +36,14 @@
                 return colors[this.status.toLowerCase()]
             },
             formattedStatus() {
-                return this.status
-                    .toLowerCase()
-                    .split('_')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ')
+                const labels = {
+                    PENDING: 'Pending',
+                    IN_PROGRESS: 'In Progress',
+                    COMPLETED: 'Completed',
+                    CANCELLED: 'Cancelled'
+                }
+
+                return labels[this.status] || this.status
             }
         },
         components: {
@@ -44,20 +52,23 @@
         methods: {
             onDrop(event) {
                 const taskId = Number(event.dataTransfer.getData('taskId'))
+                this.isDragOver = false
+
                 this.$emit('task-dropped', {
                     taskId,
                     newStatus: this.status
                 })
             }
-        }
+        },
     };
 </script>
 
 <template>
     <section 
         class="status-list-card" 
-        :class="statusClass"
-        @dragover.prevent
+        :class="[statusClass, { 'drag-over': isDragOver }]"
+        @dragover.prevent="isDragOver = true"
+        @dragleave="isDragOver = false"
         @drop="onDrop"
     >
         <h1>{{ formattedStatus }} Tasks</h1>
@@ -82,8 +93,9 @@
         padding: 15px;
         box-sizing: border-box;
         border-radius: 8px;
-        /* align-items: center; */
         text-align: left;
+        position: relative;
+        transition: box-shadow 0.2s ease;
     }
 
     .status-list-card.status-pending {
@@ -103,9 +115,21 @@
     }
 
     .status-list-card h1 {
-        /* text-align: left; */
         font-size: 22px;
         margin-bottom: 10px;
+    }
+    
+    .status-list-card.drag-over::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(79, 70, 229, 0.18);
+        border-radius: inherit;
+        pointer-events: none;
+    }
+    
+    .status-list-card.drag-over {
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.6);
     }
 
     .empty-text {
